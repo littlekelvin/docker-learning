@@ -1,0 +1,11 @@
+FROM insideo/jdk8
+RUN pwd
+ADD ./app/ /usr/jdkdemo/app/
+ADD ./resource /usr/jdkdemo/app/
+RUN cd /usr/jdkdemo/app/ && ls -a -l
+RUN chmod 775 /usr/jdkdemo/app/dockerdemo-0.0.1.jar
+VOLUME /usr/jdkdemo/app
+EXPOSE 8090
+WORKDIR /usr/jdkdemo/app/
+CMD ["-jar","dockerdemo-0.0.1.jar"]
+ENTRYPOINT ["java"]

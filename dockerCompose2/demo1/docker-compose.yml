@@ -1,0 +1,15 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./buildDir
+      dockerfile: Dockerfile
+      args:
+        buildNo: 1
+        gitcommit: changes
+    image: webapp:v1
+    ports:
+      - "8090:8090"
+    container_name: webappDemo
+    volumes:
+      - ./buildDir/res:/usr/res

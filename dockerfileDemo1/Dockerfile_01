@@ -1,0 +1,13 @@
+ARG TAG=jdk8
+FROM insideo/${TAG}
+ARG TAG
+ENV NAME=KelvinMai
+LABEL name="Kelvin Mai" \
+      age=23 \
+      phone="10086"
+LABEL maintainer="kelvin.mai@oocl.com"
+# RUN synax two form
+#RUN echo $TAG && echo ${TAG}
+#RUN /bin/sh -c 'echo $NAME'
+#RUN ["ls","-a","-l"]
+CMD ls -a -l

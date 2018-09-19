@@ -1,0 +1,11 @@
+FROM insideo/jdk8
+ENV DIRPATH /usr
+WORKDIR $DIRPATH/jdkdemo
+RUN pwd
+ADD ./app/ app/
+ADD ./resource app/
+# use workdir as excute path
+#RUN cd app && ls -a -l
+RUN chmod 775 app/dockerdemo-0.0.1.jar
+EXPOSE 8090
+CMD ["java","-jar","app/dockerdemo-0.0.1.jar"]
