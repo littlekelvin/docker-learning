@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: ./buildDir
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_1
       args:
         buildNo: 1
         gitcommit: changes
@@ -11,5 +11,27 @@ services:
     ports:
       - "8090:8090"
     container_name: webappDemo
+    depends_on:
+      - redis
     volumes:
       - ./buildDir/res:/usr/res
+    networks:
+      - webnet
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    container_name: redisDemo
+    networks:
+      - webnet
+    volumes:
+      - redis_data:/data
+networks:
+  webnet:
+volumes:
+  redis_data:
+    labels:
+      com.example.des: "redis data volume"
+
+#docker run --rm --volumes-from dbstore -v $(pwd):/backup ubuntu tar cvf /backup/backup.tar /dbdata

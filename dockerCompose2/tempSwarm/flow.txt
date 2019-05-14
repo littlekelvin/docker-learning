@@ -1,0 +1,24 @@
+
+1. deploy a service stack command:
+docker swarm init  -- initialize a machine as swarm manager
+docker stack deploy -c docker-compose.yml getstartedlab -- deploy or deploy update a service with docker-compose file
+docker service ls
+docker stack services getstartedlab - 查看服务 fstack的信息
+docker stack ps getstartedlab -- single container running in a service as task.(lisk all task of getstartedlab)
+docker stack rm getstartedlab - tear down the service getstartedlab
+docker swarm leave --force -- exit swarm mode.
+
+
+
+2. deploy swarm cluster:
+
+a. create three VM machine:
+docker-machine create -d hyperv --hyperv-virtual-switch "myswitch" myvm1 -- as swarm manager
+docker-machine create -d hyperv --hyperv-virtual-switch "myswitch" myvm2
+docker-machine create -d hyperv --hyperv-virtual-switch "myswitch" myvm3
+（docker-machine create --engine-registry-mirror=https://jyd6dqm2.mirror.aliyuncs.com -d hyperv --hyperv-virtual-switch "Default Switch" myvm4）
+  -- 注意-d hyperv --hyperv-virtual-switch "Default Switch" 指定只用的network adapter. 使用myswitch无法拉取镜像
+docker env myvm1 -- use the command tips to configure connect shell
+docker ssh myvm1 -- ssh connect to myvm1
+
+b. docker swarm init -- in myvm1 as swarm manager

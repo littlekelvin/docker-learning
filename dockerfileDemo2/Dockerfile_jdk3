@@ -1,0 +1,24 @@
+FROM rtfpessoa/ubuntu-jdk8:latest
+
+# intall maven env
+ARG MAVEN_VERSION=3.5.3
+ARG DOWNLOAD_BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
+
+RUN mkdir -p /usr/share/maven \
+    && curl -L -o /tmp/apache-maven.tar.gz ${DOWNLOAD_BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
+    && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven \
+    && ls -a -l /usr/share/maven \
+    && rm -f /tmp/apache-maven.tar.gz
+RUN ln -s /usr/share/maven/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
+
+ENV M2_HOME /usr/share/maven
+COPY ./config/settings.xml ${M2_HOME}/config/settings.xml
+
+# add resources and run
+ARG WORKPLACE=/usr/app/dockerdemo
+ADD ./dockerdemo/  ${WORKPLACE}/
+RUN cd ${WORKPLACE} && mvn clean install -DskipTests=true
+
+WORKDIR ${WORKPLACE}/target
+CMD ["-jar","dockerdemo-1.0.jar"]
+ENTRYPOINT ["java"]

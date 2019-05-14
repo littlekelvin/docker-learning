@@ -1,5 +1,6 @@
 package com.kelvin.dockerdemo.controller;
 
+import com.kelvin.dockerdemo.utils.RedisPool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,5 +42,16 @@ public class HelloController {
         out.flush();
         out.close();
         return "Write Success: " + sb.toString();
+    }
+
+    @RequestMapping("/docker/setRedis")
+    public String setRedis(String key, String value) {
+        String result = RedisPool.getJedis().set(key, value);
+        return "success: " + result;
+    }
+
+    @RequestMapping("/docker/getRedis")
+    public String getRedis(String key) {
+        return "result: " + RedisPool.getJedis().get(key);
     }
 }

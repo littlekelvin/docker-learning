@@ -1,0 +1,23 @@
+FROM ubuntu:14.04
+
+LABEL maintainer="Kelvin Mai<kelvin.mai@oocl.com>"
+
+# install jdk
+ARG java_home=/usr/share/jdk8
+
+RUN mkdir -p /usr/share/jdk8
+ADD ./res/ /usr/share/jdk8/
+RUN tar -xzf ${java_home}/jdk-8.tar.gz -C ${java_home} \
+    && rm -f ${java_home}/jdk-8.tar.gz
+RUN cd ${java_home} &&  mv jdk1.8.0_181/ jdk8/
+#RUN chmod -R 777 ${java_home}
+RUN ln -s /usr/share/jdk8/jdk8/java /usr/bin/java
+
+ENV JAVA_HOME /usr/share/jdk8/jdk8
+ENV PATH $PATH:${JAVA_HOME}/bin
+RUN cd ${JAVA_HOME}/bin && ls -a -l
+RUN echo $PATH
+
+#RUN cd ${JAVA_HOME}/bin && ./java -version
+WORKDIR ${JAVA_HOME}
+CMD ["sleep","360"]
