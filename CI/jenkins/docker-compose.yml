@@ -1,0 +1,26 @@
+version: '3'
+services:
+  jenkins-ci:
+    environment:
+      - JENKINS_UC=https://updates.jenkins.io
+      - JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
+      - JENKINS_INCREMENTALS_REPO_MIRROR=https://repo.jenkins-ci.org/incrementals
+    build:
+      context: ./buildDir
+      dockerfile: Dockerfile
+    image: jenkins-ci:v1
+    container_name: jenkins-ci
+    restart: always
+    ports:
+      - "8088:8080"
+      - "50000:50000"
+    networks:
+      - webnet
+    volumes:
+      - jenkins-vol:/var/jenkins_home
+networks:
+  webnet:
+volumes:
+  jenkins-vol:
+    labels:
+      com.demo.jenkins: "jenkins volume"

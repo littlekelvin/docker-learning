@@ -1,0 +1,41 @@
+version: '3'
+services:
+  sonarqube:
+    image: sonarqube:7.1
+    container_name: sonarqube
+    restart: always
+    ports:
+      - "9000:9000"
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonar?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true
+    volumes:
+      - '../volumes/sonarqube/conf:/opt/sonarqube/conf'
+      - '../volumes/sonarqube/data:/opt/sonarqube/data'
+      - '../volumes/sonarqube/logs:/opt/sonarqube/logs'
+      - '../volumes/sonarqube/extensions:/opt/sonarqube/extensions'
+      - './tool:/opt/sonarqube/tool'
+    depends_on:
+      - mysql
+    entrypoint:
+      bash -c '
+      mkdir -p /tmp/sonarqube;
+      javac -d /tmp/sonarqube /opt/sonarqube/tool/com/ci/Detector.java;
+      java -cp `find /opt/sonarqube/ -name "mysql-connector*.jar"`:/tmp/sonarqube -Dretry=480 com.ci.Detector;
+      ./bin/run.sh'
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=Password1
+      - MYSQL_DATABASE=sonar
+      - MYSQL_USER=sonar
+      - MYSQL_PASSWORD=sonar
+    ports:
+      - "3306:3306"
+    volumes:
+      - '../volumes/mysql/data:/var/lib/mysql'
+
